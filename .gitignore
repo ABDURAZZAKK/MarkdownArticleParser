@@ -1,0 +1,25 @@
+# Compiled JavaScript and Source Maps
+*.js
+*.js.map
+
+# Output directories
+/dist/
+/build/
+/out/
+/test_html/
+
+# Node.js modules
+node_modules/
+
+# Log files
+*.log
+
+# Temporary and editor-specific files
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Environment variables
+.env
+.env.*
