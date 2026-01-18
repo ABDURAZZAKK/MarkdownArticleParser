@@ -1,91 +1,19 @@
-// {
-//   // Visit https://aka.ms/tsconfig to read more about this file
-//   "compilerOptions": {
-//     // File Layout
-//     // "rootDir": "./src",
-//     // "outDir": "./dist",
-
-//     // Environment Settings
-//     // See also https://aka.ms/tsconfig/module
-//     "module": "nodenext",
-//     "target": "esnext",
-//     "types": [],
-//     // For nodejs:
-//     // "lib": ["esnext"],
-//     // "types": ["node"],
-//     // and npm install -D @types/node
-
-//     // Other Outputs
-//     "sourceMap": true,
-//     "declaration": true,
-//     "declarationMap": true,
-
-//     // Stricter Typechecking Options
-//     "noUncheckedIndexedAccess": true,
-//     "exactOptionalPropertyTypes": true,
-
-//     // Style Options
-//     // "noImplicitReturns": true,
-//     // "noImplicitOverride": true,
-//     // "noUnusedLocals": true,
-//     // "noUnusedParameters": true,
-//     // "noFallthroughCasesInSwitch": true,
-//     // "noPropertyAccessFromIndexSignature": true,
-
-//     // Recommended Options
-//     "strict": true,
-//     "jsx": "react-jsx",
-//     "verbatimModuleSyntax": true,
-//     "isolatedModules": true,
-//     "noUncheckedSideEffectImports": true,
-//     "moduleDetection": "force",
-//     "skipLibCheck": true,
-//   },
-//   "include": ["src/**/*"],
-//   "exclude": ["node_modules", "dist"]
-// }
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
-
-
-// {
-//   "name": "fork-obsidian-telegram-sync",
-//   "version": "1.0.0",
-//   "description": "",
-//   "main": "index.js",
-//   "keywords": [],
-//   "author": "",
-//   "license": "ISC",
-//   "scripts": {
-//     "dev": "ts-node src/index.ts",
-//     "build": "tsc",
-//     "start": "node dist/index.js",
-//     "watch": "tsc --watch",
-//     "clean": "rm -rf dist output",
-//     "demo": "npm run build && npm start"
-//   },
-//   "dependencies": {
-//     "@mozilla/readability": "^0.6.0",
-//     "jsdom": "^27.0.0"
-//   },
-//   "devDependencies": {
-//     "@types/jsdom": "^21.1.7",
-//     "@types/node": "^24.5.2",
-//     "ts-node": "^10.9.2",
-//     "typescript": "^5.9.2"
-//   }
-// }
