@@ -1,5 +1,5 @@
-import { MarkdownArticleParser } from './readability';
-import { Logger } from './utils/logger';
+import { MarkdownArticleParser } from './readability.ts';
+import { Logger } from './utils/logger.ts';
 import * as fs from 'fs';
 import * as path from 'path';
 import { JSDOM } from 'jsdom';
@@ -146,7 +146,8 @@ main().catch((error) => {
 --------------------------------------------- */
 function saveToJSONFile(htmlResult: any, filename: string = 'article-result.json') {
   if (!htmlResult) return;
-  const outputDir = path.join(__dirname, '..', 'out');
+  
+  const outputDir = path.join(import.meta.dirname, '..', 'out');
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }

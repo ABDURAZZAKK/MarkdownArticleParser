@@ -1,3 +1,4 @@
+// @types/index.ts
 export interface ReadabilityResult {
   title: string;
   content: string;
@@ -37,3 +38,10 @@ export interface ArticleInfo {
   language: string;
   timestamp: Date;
 }
+
+// Экспортируем все интерфейсы по умолчанию тоже
+export default {
+  ReadabilityResult,
+  ReadabilityOptions,
+  ArticleInfo
+};

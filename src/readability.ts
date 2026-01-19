@@ -1,11 +1,12 @@
+// readability.ts
 import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
-import { ReadabilityResult, ReadabilityOptions, ArticleInfo } from './types';
-import { Logger } from './utils/logger';
+import type { ArticleInfo, ReadabilityOptions } from './types/index.ts'; // Изменяем импорт
+import { Logger } from './utils/logger.ts';
 
 export class MarkdownArticleParser {
   private options: ReadabilityOptions;
-  private imgFormats = ['jpg','jpeg', 'png', 'gif', 'tiff', 'webp', 'svg', 'pdf']
+  private imgFormats = ['jpg','jpeg', 'png', 'gif', 'tiff', 'webp', 'svg', 'pdf'];
 
   constructor(options: ReadabilityOptions = {}) {
     this.options = {
@@ -57,12 +58,12 @@ export class MarkdownArticleParser {
     try {
       // Создаем копию документа для Readability
       const proccedDoc = this.procces(doc); 
-      // const proccedDoc = doc.cloneNode(true) as Document;
       const reader = new Readability(proccedDoc, this.options);
 
       const article = reader.parse();
-      if (article?.textContent) 
-        article.textContent = article.textContent.replace(/^(\s*)/gm, '')
+      if (article?.textContent) {
+        article.textContent = article.textContent.replace(/^(\s*)/gm, '');
+      }
 
       if (!article) {
         Logger.warn('No article content found');
@@ -79,79 +80,86 @@ export class MarkdownArticleParser {
   private procces(doc: Document): Document {
     const documentClone = doc.cloneNode(true) as Document;
 
-    this.proccesImages(documentClone, "a")
-    this.proccesImages(documentClone, "img")
-    this.proccesCode(documentClone)
-    this.proccesLists(documentClone)
-    this.proccesHeaders(documentClone)
-    this.proccesEm(documentClone)
-    this.proccesStrong(documentClone)
+    this.proccesImages(documentClone, "a");
+    this.proccesImages(documentClone, "img");
+    this.proccesCode(documentClone);
+    this.proccesLists(documentClone);
+    this.proccesHeaders(documentClone);
+    this.proccesEm(documentClone);
+    this.proccesStrong(documentClone);
     
     return documentClone;
   }
 
-  private proccesImages(doc: Document, tag: any) {
+  private proccesImages(doc: Document, tag: string): void {
     doc.querySelectorAll(tag).forEach(link => {
-      let href;
+      let href: string | null = null;
       if (link.hasAttribute('href')){
-        href = link.getAttribute('href')
+        href = link.getAttribute('href');
       } else if (link.hasAttribute('src')) {
-        href = link.getAttribute('src')
+        href = link.getAttribute('src');
       } else return;
-      const span = doc.createElement('p');
-
-      let isIMG = false
       
-      const linkSplited = href.split('.')
-      if (this.imgFormats.includes(linkSplited[linkSplited.length-1])) {
-        isIMG = true
+      const span = doc.createElement('p');
+      let isIMG = false;
+      
+      if (href) {
+        const linkSplited = href.split('.');
+        const extension = linkSplited[linkSplited.length - 1].toLowerCase();
+        if (this.imgFormats.includes(extension)) {
+          isIMG = true;
+        }
       }
-      let txt = link.text
+      
+      let txt = link.textContent;
       if (txt){
-        txt = txt.trim().replace(/\s+/g, ' ')
-        if (isIMG)
-          span.textContent =  `\n![${txt}](${href})\n`
-        else
-          span.textContent =  ` [${txt}](${href}) `
+        txt = txt.trim().replace(/\s+/g, ' ');
+        if (isIMG && href) {
+          span.textContent = `\n![${txt}](${href})\n`;
+        } else if (href) {
+          span.textContent = ` [${txt}](${href}) `;
+        }
+      } else {
+        if (isIMG && href) {
+          span.textContent = `\n![](${href})\n`;
+        } else if (href) {
+          span.textContent = ` ${href} `;
+        }
       }
-      else{
-        if (isIMG)
-          span.textContent =  `\n![](${href})\n`
-        else
-          span.textContent =  ` ${href} `
-      }
-      link.parentNode?.replaceChild(span, link)
+      link.parentNode?.replaceChild(span, link);
     }); 
   }
 
-  private proccesCode(doc: Document) {
+  private proccesCode(doc: Document): void {
     doc.querySelectorAll('code').forEach(code => {
-      code.textContent = '\n```\n' + code.textContent + '\n```\n'
+      code.textContent = '\n```\n' + (code.textContent || '') + '\n```\n';
     }); 
   }
 
-  private proccesLists(doc: Document) {
+  private proccesLists(doc: Document): void {
     doc.querySelectorAll('li').forEach(li => {
-      li.textContent = "- " + li.textContent
+      li.textContent = "- " + (li.textContent || '');
     }); 
   }
 
-  private proccesHeaders(doc: Document) {
+  private proccesHeaders(doc: Document): void {
     for (let i = 1; i <= 5; i++) {
-      const tag = "h"+i
+      const tag = "h" + i;
       doc.querySelectorAll(tag).forEach(t => {
-      t.textContent = `\n${"#".repeat(i)} ${t.textContent.trim()}\n`
-    }); 
+        t.textContent = `\n${"#".repeat(i)} ${t.textContent?.trim() || ''}\n`;
+      }); 
     }
   }
-  private proccesEm(doc: Document) {
-      doc.querySelectorAll("em").forEach(t => {
-      t.textContent = ` *${t.textContent.trim()}* `
+
+  private proccesEm(doc: Document): void {
+    doc.querySelectorAll("em").forEach(t => {
+      t.textContent = ` *${t.textContent?.trim() || ''}* `;
     });     
   }
-  private proccesStrong(doc: Document) {
-      doc.querySelectorAll("strong").forEach(t => {
-      t.textContent = ` **${t.textContent.trim()}** `
+
+  private proccesStrong(doc: Document): void {
+    doc.querySelectorAll("strong").forEach(t => {
+      t.textContent = ` **${t.textContent?.trim() || ''}** `;
     });     
   }
 

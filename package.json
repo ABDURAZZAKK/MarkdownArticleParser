@@ -1,6 +1,7 @@
 {
-  "name": "readability-typescript",
+  "name": "md-article-parser",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "tmp-test": "ts-node src/test.ts",
     "dev": "ts-node src/index.ts",
