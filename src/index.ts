@@ -1,8 +1,11 @@
-import { MarkdownArticleParser } from './readability.ts';
+import { MarkdownArticleParser } from "./readability.ts";
 import { Logger } from './utils/logger.ts';
 import * as fs from 'fs';
 import * as path from 'path';
-import { JSDOM } from 'jsdom';
+import { fileURLToPath } from 'url';
+
+
+
 
 /* ---------------------------------------------
    Данные для демо 1
@@ -62,36 +65,36 @@ function demoParseHtmlString(parser: MarkdownArticleParser) {
 /* ---------------------------------------------
    Функция – Демонстрация 2: Парсинг реальных URL
 --------------------------------------------- */
-async function demoParseRealUrls(parser: MarkdownArticleParser) {
-  Logger.info('\n=== Демонстрация 2: Парсинг реальных URL ===');
-  const testURLs = [
-    'https://habr.com/ru/articles/955488/',
-    'https://example.com',
-    'https://blog.mozilla.org/en/',
-    'https://en.wikipedia.org/wiki/Wiki',
-  ];
+// async function demoParseRealUrls(parser: MarkdownArticleParser) {
+//   Logger.info('\n=== Демонстрация 2: Парсинг реальных URL ===');
+//   const testURLs = [
+//     'https://habr.com/ru/articles/955488/',
+//     'https://example.com',
+//     'https://blog.mozilla.org/en/',
+//     'https://en.wikipedia.org/wiki/Wiki',
+//   ];
 
-  // Обработка реальных URL
-  try {
-    const urlResults = await parser.parseMultipleURLs(testURLs);
-    urlResults.forEach((result, index) => {
-      if (result) {
-        Logger.success(`\n--- Result ${index + 1} ---`);
-        Logger.info('URL:', result.url);
-        Logger.info('Title:', result.title);
-        Logger.info('Site:', result.siteName);
-        Logger.info('Words:', result.wordCount);
-        Logger.info('Reading time:', result.readingTime, 'min');
-        saveToJSONFile(result, result.title);
-      }
-    });
-  } catch (error) {
-    Logger.error('Error in URL parsing demo:', error);
-  }
+//   // Обработка реальных URL
+//   try {
+//     const urlResults = await parser.parseMultipleURLs(testURLs);
+//     urlResults.forEach((result, index) => {
+//       if (result) {
+//         Logger.success(`\n--- Result ${index + 1} ---`);
+//         Logger.info('URL:', result.url);
+//         Logger.info('Title:', result.title);
+//         Logger.info('Site:', result.siteName);
+//         Logger.info('Words:', result.wordCount);
+//         Logger.info('Reading time:', result.readingTime, 'min');
+//         saveToJSONFile(result, result.title);
+//       }
+//     });
+//   } catch (error) {
+//     Logger.error('Error in URL parsing demo:', error);
+//   }
 
-  // Дополнительно: чтение локальных HTML‑файлов из каталога test_html
+//   // Дополнительно: чтение локальных HTML‑файлов из каталога test_html
 
-}
+// }
 
 function readTestFiles(parser: MarkdownArticleParser) {
   const testHTMLDir = 'test_html';
@@ -146,8 +149,11 @@ main().catch((error) => {
 --------------------------------------------- */
 function saveToJSONFile(htmlResult: any, filename: string = 'article-result.json') {
   if (!htmlResult) return;
+
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   
-  const outputDir = path.join(import.meta.dirname, '..', 'out');
+  const outputDir = path.join(__dirname, '..', 'out');
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }

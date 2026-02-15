@@ -1,6 +1,7 @@
 # Compiled JavaScript and Source Maps
 *.js
 *.js.map
+package-lock.json
 
 # Output directories
 /dist/
